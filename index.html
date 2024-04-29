@@ -24,12 +24,28 @@
             background-color: rgba(255, 255, 255, 0.3);
             background-blend-mode: overlay;
         }
+        /* https://www.geeksforgeeks.org/css-floating-animation/ */
+
+        .floating {  
+            animation-name: floating;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+            margin-left: 30px;
+            margin-top: 5px;
+        }
+        @keyframes floating { 
+            0% { transform: translate(0,  0px); }
+            50%  { transform: translate(0, 15px); }
+            100%   { transform: translate(0, -0px); }    
+        }
         </style>
     </head>
 
     <body class = "bg">
         <div style = "display: flex; align-items:center; flex-direction: column;">
             <h1> <i>My Neighbor Takahata:</i> A Studio Ghibli Director Analysis </h1>
+            <img class="floating" src = "ponyo.png" width = 180 height = 180 style="margin-left: 1200; position: absolute" > </img>
             <p>by Carly Hu (ch862) and Myna Lim (ml2326)</p>
             <h3 style = "background-color: rgb(4, 88, 96);"> "I gave Isao Takahata 15 years of my youth. I want them back!" - Hayao Miyazaki</h3>
         </div>
