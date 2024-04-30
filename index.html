@@ -71,7 +71,7 @@
                 </div>
                 <img class="floating" src = "totoro.png" width = 8%  style="margin-left: 600; margin-top: 10; position: absolute" > </img>
                 </div>  
-                <div class="timeline" id = "timeline" style="margin: 20px; height: 2000px; width: 700px; border: 2px solid white; ">timeline</div>
+                <svg class="timeline" id = "timeline" style="margin: 20px; height: 2000px; width: 700px; border: 2px solid white; ">timeline</svg>
 
             </div>
                 <div style = "display: flex; flex-direction: column; position: fixed; margin-left: 750;">
@@ -85,6 +85,7 @@
         const requestData = async function(){
             const ghibliData = await d3.csv("studio-ghibli.csv");
             // console.log(ghibliData)
+            console.log(ghibliData);
 
             const svg = d3.select("#timeline")
             let margin = { top: 50, bottom: 40, right: 35, left: 200 }
@@ -92,8 +93,85 @@
             const height = svg.attr("height");
             const chartWidth = width - margin.left - margin.right;
             const chartHeight = height - margin.top - margin.bottom;
- 
-            let yearScale
+            let annotations = svg.append("g").attr("id","annotations");
+
+            svg.append('rect')
+                .attr('x', 55)
+                .attr('y', 43)
+                .attr('width', 240)
+                .style("text-anchor", "middle")
+                .attr('height', 20)
+                .attr('fill', 'white')
+                .attr("opacity", 0.6);
+            svg.append('text')
+                .text("Isao Takahata / Others")
+                .attr('x', 175)
+                .attr('y', 60)
+                .style("font-weight", "bold")
+                .style("text-anchor", "middle")
+                .attr('font-size', '20px')
+                .style('fill', "#3A5311")
+                .style('text-shadow', 'none');
+            svg.append('rect')
+                .attr('x', 440)
+                .attr('y', 43)
+                .attr('width', 170)
+                .style("text-anchor", "middle")
+                .attr('height', 20)
+                .attr('fill', 'white')
+                .attr("opacity", 0.6);
+            svg.append('text')
+                .text("Hayao Miyazaki")
+                .attr('x', 175+350)
+                .attr('y', 60)
+                .style("font-weight", "bold")
+                .style("text-anchor", "middle")
+                .attr('font-size', '20px')
+                .style('fill', "#281E50")
+                .style('text-shadow', 'none');
+            
+            svg.append('rect')
+            .attr('x', 350)
+            .attr('y', 100)
+            .attr('width', 20)
+            .attr('height', 1800)
+            .attr('stroke', 'white')
+            .attr('fill', 'white')
+            .attr('opacity', 0.5);
+
+            const yearExtent = d3.extent(ghibliData, d => d.Year);
+            const yearScale = d3.scaleLinear()
+                .domain(yearExtent)
+                .range([100, 1900]);
+
+            const directors = d3.map(ghibliData, d => d.Director)
+            const directorScale = d3.scaleBand()
+                .domain(directors)
+                .range([chartWidth/2-chartWidth/4, chartWidth/2+chartWidth/4])
+                .padding([0.2]);
+            
+            let leftAxis = d3.axisLeft(yearScale).tickFormat(d3.format(''));
+            annotations.append("g")
+                    .attr("class", "y axis")
+                    .attr("transform",`translate(${margin.left+170},${0})`)
+                    .style("stroke", 'black')
+                    .call(leftAxis)
+                    .selectAll("line")
+                    .style("stroke", "black"); // Change tick line color
+
+
+
+            // const movies = d3.map(ghibliData, d => d.Name)
+            // const moviesScale = d3.scaleBand()
+            //                 .domain(movies)
+            //                 .range([0, 10])
+            //                 .padding([0.2])
+
+                        // var yScale = d3.scaleBand()
+                        //             .domain(breakdowns)
+                        //             .range([10, breakHeight])
+                        //             .padding([0.2])
+            
         }
         requestData();
 
