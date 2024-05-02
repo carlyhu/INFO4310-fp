@@ -71,12 +71,12 @@
                 </div>
                 <img class="floating" src = "totoro.png" width = 8%  style="margin-left: 600; margin-top: 10; position: absolute" > </img>
                 </div>  
-                <svg class="timeline" id = "timeline" style="margin: 20px; height: 2000px; width: 700px; border: 2px solid white; ">timeline</svg>
+                <svg class="timeline" id = "timeline" style="margin: 20px; height: 2000px; width: 700px; ">timeline</svg>
 
             </div>
                 <div style = "display: flex; flex-direction: column; position: fixed; margin-left: 750;">
                     <div class = "select" style="margin: 20px; height: 120px; width: 600px; border: 2px solid white;"> select</div>
-                    <div class = "chart" style="margin: 20px; height: 350px; width: 600px; border: 2px solid white;"> visualization</div>
+                    <svg class = "linechart" id = "linechart" style="margin: 20px; height: 350px; width: 600px; border: 2px solid white;"> visualization</svg>
                     <!-- https://github.com/edriessen/scrollytelling-scrollama-d3-demo?tab=readme-ov-file 
                     for scrolly library -->
                 </div>
@@ -98,13 +98,14 @@
 
             // timeline top labels
             svg.append('rect')
-                .attr('x', 55)
-                .attr('y', 43)
-                .attr('width', 240)
+                .attr('x', 53)
+                .attr('y', 41)
+                .attr('width', 245)
                 .style("text-anchor", "middle")
-                .attr('height', 20)
-                .attr('fill', 'white')
-                .attr("opacity", 0.6);
+                .attr('height', 25)
+                .attr('fill', 'beige')
+                .attr("opacity", 0.6)
+                .attr("rx", "5")
             svg.append('text')
                 .text("Isao Takahata / Others")
                 .attr('x', 175)
@@ -115,13 +116,14 @@
                 .style('fill', "#3A5311")
                 .style('text-shadow', 'none');
             svg.append('rect')
-                .attr('x', 440)
-                .attr('y', 43)
-                .attr('width', 170)
+                .attr('x', 438)
+                .attr('y', 41)
+                .attr('width', 175)
                 .style("text-anchor", "middle")
-                .attr('height', 20)
-                .attr('fill', 'white')
-                .attr("opacity", 0.6);
+                .attr('height', 25)
+                .attr('fill', 'beige')
+                .attr("opacity", 0.6)
+                .attr("rx", "5")
             svg.append('text')
                 .text("Hayao Miyazaki")
                 .attr('x', 175+350)
@@ -205,19 +207,27 @@
                     side = d3.select(this).datum().x - 160
 
                 }
+                let film = d3.select(this).datum()
+
                 label.text(allInfo) 
                     .attr("x", side) 
-                    .attr("y", (d3.select(this).datum().y + 0)) 
+                    .attr("y", (film.y + 0)) 
                     .attr("visibility", "visible")
                     .style("font-size", "12")
                     .style("font-weight", "bold")
                     .style("text-shadow", "none")
+                    .style("font-style", "italic")
+
+                label.append("tspan").text(film["Director"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter")
+                label.append("tspan").text("Budget: "+film["Budget"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkred")
+                label.append("tspan").text("Revenue: "+film["Revenue"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkgreen")
+                label.append("tspan").text("Duration: "+film["Duration"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkblue")
 
                 labelWidth = d3.select(this).datum()["Name"].length 
 
                 labelback.style("fill","beige")
                     .attr("width", 160)
-                    .attr("height", 200)
+                    .attr("height", 160)
                     .attr("visibility","visible")
                     .attr("x", side - 10) 
                     .attr("y", (d3.select(this).datum().y - 20)) 
@@ -236,8 +246,53 @@
                         //             .domain(breakdowns)
                         //             .range([10, breakHeight])
                         //             .padding([0.2])
+
+            // line plots!
+
+            // const svg = d3.select("#timeline")
+            // let margin = { top: 50, bottom: 40, right: 35, left: 200 }
+            // const width = svg.attr("width");
+            // const height = svg.attr("height");
+
+            let lineplot = d3.select("#linechart")
+            let width2 = 600 // idk why it's not pulling when i do it normally
+            let height2 = 350
+            let margin2 = {top: 10, right: 10, bottom: 50, left: 50};
+            let chartWidth2 = width2 - margin2.left - margin2.right;
+            let chartHeight2 = height2 - margin2.top - margin2.bottom;
             
+
+            let chartArea = lineplot.append("g").attr("transform","translate("+margin2.left+","+margin2.top+")");
+
+            const loadLine = async function() {
+
+                const xScale = d3.scaleLinear().domain(yearExtent).range([0, chartWidth2]);
+
+                const budgetExtent = d3.extent(ghibliData, d => d.Budget);
+                const yScale = d3.scaleLinear().domain(budgetExtent).range([chartHeight2,0])
+
+                let leftAxis2 = d3.axisLeft(yScale)
+                lineplot.append('g')
+                        .attr('transform',`translate(${margin2.left-10},${margin2.top})`) 
+                        .call(leftAxis2)
+
+                // let leftGridlines2 = d3.axisLeft(yScale)
+                //         .tickSize(-chartWidth2-10)
+                //         .tickPadding(0)
+                //         .tickFormat('')
+                // //         .ticks(5);
+                // lineplot.append('g')
+                //         .attr('transform',`translate(${margin2.left-10},${margin2.top})`)
+                //         .lower()
+                //         .call(leftGridlines2);   
+                
+                let bottomAxis = d3.axisBottom(xScale)
+                lineplot.append('g')
+                     .attr('transform',`translate(${margin2.left},${chartHeight2+margin2.top+10})`)
+                     .call(bottomAxis)
         }
+        loadLine();
+    }
         requestData();
 
     </script>
