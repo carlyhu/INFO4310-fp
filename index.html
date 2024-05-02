@@ -87,6 +87,16 @@
         const requestData = async function(){
             const ghibliData = await d3.csv("studio-ghibli.csv");
             console.log(ghibliData);
+            //string -> int
+            ghibliData.forEach(d => {
+                    d.Budget = +d.Budget.replace(/\D/g, ''); 
+                    });
+                ghibliData.forEach(d => {
+                    d.Revenue = +d.Revenue.replace(/\D/g, ''); 
+                    });
+                ghibliData.forEach(d => {
+                    d.Year = +d.Year.replace(/\D/g, ''); 
+                    });
 
             const svg = d3.select("#timeline")
             let margin = { top: 50, bottom: 40, right: 35, left: 200 }
@@ -247,6 +257,7 @@
                         //             .range([10, breakHeight])
                         //             .padding([0.2])
 
+                        
             // line plots!
 
             // const svg = d3.select("#timeline")
@@ -255,11 +266,12 @@
             // const height = svg.attr("height");
 
             let lineplot = d3.select("#linechart")
-            let width2 = 600 // idk why it's not pulling when i do it normally
-            let height2 = 350
-            let margin2 = {top: 10, right: 10, bottom: 50, left: 50};
-            let chartWidth2 = width2 - margin2.left - margin2.right;
-            let chartHeight2 = height2 - margin2.top - margin2.bottom;
+            const annotations2 = lineplot.append("g").attr("id","annotations");
+            const width2 = 600 // idk why it's not pulling when i do it normally
+            const height2 = 350
+            const margin2 = {top: 10, right: 10, bottom: 50, left: 50};
+            const chartWidth2 = width2 - margin2.left - margin2.right;
+            const chartHeight2 = height2 - margin2.top - margin2.bottom;
             
 
             let chartArea = lineplot.append("g").attr("transform","translate("+margin2.left+","+margin2.top+")");
@@ -267,27 +279,20 @@
             const loadLine = async function() {
 
                 const xScale = d3.scaleLinear().domain(yearExtent).range([0, chartWidth2]);
-
                 const budgetExtent = d3.extent(ghibliData, d => d.Budget);
                 const yScale = d3.scaleLinear().domain(budgetExtent).range([chartHeight2,0])
 
-                let leftAxis2 = d3.axisLeft(yScale)
-                lineplot.append('g')
+                let leftAxis2 = d3.axisLeft(yScale).tickFormat(d3.format("$.2s"))
+                let leftGridlines2 = d3.axisLeft(yScale)
+                        .tickSize(-chartWidth2-10)
+                        .tickFormat("");
+
+                annotations2.append('g')
                         .attr('transform',`translate(${margin2.left-10},${margin2.top})`) 
                         .call(leftAxis2)
-
-                // let leftGridlines2 = d3.axisLeft(yScale)
-                //         .tickSize(-chartWidth2-10)
-                //         .tickPadding(0)
-                //         .tickFormat('')
-                // //         .ticks(5);
-                // lineplot.append('g')
-                //         .attr('transform',`translate(${margin2.left-10},${margin2.top})`)
-                //         .lower()
-                //         .call(leftGridlines2);   
                 
                 let bottomAxis = d3.axisBottom(xScale)
-                lineplot.append('g')
+                annotations2.append('g')
                      .attr('transform',`translate(${margin2.left},${chartHeight2+margin2.top+10})`)
                      .call(bottomAxis)
         }
