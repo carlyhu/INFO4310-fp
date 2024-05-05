@@ -41,7 +41,6 @@
         }
         a{
             color: rgb(222, 152, 0);
-            
             text-shadow:2px 2px 4px #0000008f;
 
         }
@@ -53,7 +52,21 @@
             border-radius: 10px;
             background-color: beige;
             border: none;
-
+        }
+        @keyframes shake { 
+            0%, 100% {
+                transform: translateX(0);
+            }
+            10%, 30%, 50%, 70%, 90% {
+                transform: translateY(-5px);
+            }
+            20%, 40%, 60%, 80% {
+                transform: translateY(5px);
+            }
+        }
+        .shake {
+            animation: shake 2s; 
+            animation-iteration-count: infinite;
         }
         </style>
     </head>
@@ -82,14 +95,15 @@
                 </div>
                 <img class="floating" src = "totoro.png" width = 8%  style="margin-left: 600; margin-top: 10; position: absolute" > </img>
                 </div>  
-                <svg class="timeline" id = "timeline" style="margin: 20px; height: 2000px; width: 700px; ">timeline</svg>
+                <svg class="timeline" id = "timeline" style="margin: 20px; height: 2000px; width: 700px; "></svg>
 
             </div>
                 <div style = "display: flex; flex-direction: column; position: fixed; margin-left: 750;">
                     <div class = "select" id = "button-bar" style="margin: 20px; width: 600px; display: flex; justify-content: center; align-items: center;"> </div>
-                    <svg class = "linechart" id = "linechart" style="margin: 20px; height: 450px; width: 600px; "> visualization</svg>
+                    <svg class = "linechart" id = "linechart" style="margin: 20px; height: 450px; width: 600px; "> </svg>
                     <!-- https://github.com/edriessen/scrollytelling-scrollama-d3-demo?tab=readme-ov-file 
                     for scrolly library -->
+                   
                 </div>
             </div>
     </body>
@@ -216,21 +230,23 @@
             let labelback= svg.append("rect").attr("visibility","hidden")    
             let label = svg.append("text").attr("visibility","hidden")    
 
-            // mouseover functionality
+            // hover functionality
             images.on("mouseover", function() {
-                d3.select(this).attr("opacity", 1);
+                console.log(d3.select(this).attr("width"))
+                d3.select(this).attr("width", 80) 
+                              .attr("height",80)
+                              .classed("shake", true);  
+        
+                let film = d3.select(this).datum()
 
-                let name = d3.select(this).datum()["Name"]
+                let name = film["Name"]
                 let allInfo = name
 
-                console.log(d3.select(this).datum().x)
                 if (d3.select(this).datum().x > 200){
                     side = d3.select(this).datum().x + 60
                 } else {
                     side = d3.select(this).datum().x - 160
-
                 }
-                let film = d3.select(this).datum()
 
                 label.text(allInfo) 
                     .attr("x", side) 
@@ -249,18 +265,38 @@
                 labelWidth = d3.select(this).datum()["Name"].length 
 
                 labelback.style("fill","beige")
-                    .attr("width", 160)
-                    .attr("height", 160)
+                    .attr("width", 200)
+                    .attr("height", 130)
                     .attr("visibility","visible")
                     .attr("x", side - 10) 
                     .attr("y", (d3.select(this).datum().y - 20)) 
                     .style("stroke-width", "2")
                     .style("opacity", "0.6")
                     .style("rx", "5")
+
+                // affect line graph during hover
+                let correspondingCircle = chartArea.selectAll("circle.point").filter(d => d.Name === film.Name);
+                correspondingCircle.transition().duration(200)
+                    .attr("r", 10) 
+                    .attr("stroke", "beige")
+                    .attr("stroke-width", 2);
+
+            });
+
+            images.on("mouseout", function() {
+
+                d3.select(this).attr("width", 50)
+                d3.select(this).attr("height", 50)
+
+
+                let film = d3.select(this).datum();
+                let correspondingCircle = chartArea.selectAll("circle.point").filter(d => d.Name === film.Name);
+                correspondingCircle.transition().duration(200)
+                    .attr("r", 3) 
+                    .attr("stroke", "none");
             });
                         
             // line plots!
-
             let lineplot = d3.select("#linechart")
             const annotations2 = lineplot.append("g").attr("id","annotations");
             const width2 = 600 
