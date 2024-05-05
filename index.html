@@ -97,6 +97,7 @@
                 ghibliData.forEach(d => {
                     d.Year = +d.Year.replace(/\D/g, ''); 
                     });
+            ghibliData.sort((a, b) => a.Year - b.Year);
 
             const svg = d3.select("#timeline")
             let margin = { top: 50, bottom: 40, right: 35, left: 200 }
@@ -280,7 +281,7 @@
 
                 const xScale = d3.scaleLinear().domain(yearExtent).range([0, chartWidth2]);
                 const budgetExtent = d3.extent(ghibliData, d => d.Budget);
-                const yScale = d3.scaleLinear().domain(budgetExtent).range([chartHeight2,0])
+                const yScale = d3.scaleLog().domain(budgetExtent).range([chartHeight2,0])
 
                 let leftAxis2 = d3.axisLeft(yScale).tickFormat(d3.format("$.2s"))
                 let leftGridlines2 = d3.axisLeft(yScale)
@@ -295,6 +296,44 @@
                 annotations2.append('g')
                      .attr('transform',`translate(${margin2.left},${chartHeight2+margin2.top+10})`)
                      .call(bottomAxis)
+
+                const miyazakiData = ghibliData.filter(d => d.Director === "Hayao Miyazaki");
+                const othersData = ghibliData.filter(d => d.Director !== "Hayao Miyazaki");
+
+                const lineGenerator1 = d3.line()
+                    .x(d => xScale(d['Year']))
+                    .y(d => yScale(d['Budget']));
+
+                // Append the first line
+                chartArea.append('path')
+                    .datum(miyazakiData)
+                    .attr('d', lineGenerator1)
+                    .attr('fill', 'none')
+                    .attr('stroke', 'darkblue')
+                    .attr('stroke-width', 2);
+
+                const lineGenerator2 = d3.line()
+                    .x(d => xScale(d['Year']))
+                    .y(d => yScale(d['Budget']));
+
+                // Append the first line
+                chartArea.append('path')
+                    .datum(othersData)
+                    .attr('d', lineGenerator2)
+                    .attr('fill', 'none')
+                    .attr('stroke', 'red')
+                    .attr('stroke-width', 2);
+            
+                chartArea.selectAll("circle.point").data(ghibliData)
+                    .join("circle").attr("class","point")
+                    .attr("cx", d => xScale(d['Year']))
+                    .attr("cy", d => yScale(d['Budget']))
+                    .attr("r", 3)
+                    .attr("opacity", 1)
+                    .style("fill", d => d.Director === "Hayao Miyazaki" ? 'darkblue' : 'red');
+
+
+
         }
         loadLine();
     }
