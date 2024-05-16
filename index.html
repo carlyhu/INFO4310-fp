@@ -3,10 +3,12 @@
         <title>Studio Ghibli Directors</title>
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <script src="https://d3js.org/d3-array.v2.min.js"></script>
-
+        <script type="text/javascript" src="scrolly.js"></script>
+    
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="cssanimation.css"> 
 
         <style>
         html, body{
@@ -24,7 +26,6 @@
             background-color: rgba(255, 255, 255, 0.3);
             background-blend-mode: overlay;
         }
-        /* https://www.geeksforgeeks.org/css-floating-animation/ */
 
         .floating {  
             animation-name: floating;
@@ -68,6 +69,20 @@
             animation: shake 2s; 
             animation-iteration-count: infinite;
         }
+        .container {
+            position: relative;
+        }
+        .overlay1 {
+            position: absolute;
+            top: 1010px;
+            left: 20px;
+            background-color:rgba(245, 245, 220, 0.7); 
+            padding: 10px;
+            border-radius: 5px;
+            width: 300px;
+            z-index: 1; /* Ensure the div is above the SVG */
+        }
+
         </style>
     </head>
 
@@ -81,7 +96,7 @@
 
        
         <div style = "display: flex; flex-direction: row;">
-            <div style = "display: flex; flex-direction: column; width: 700px;">
+            <div class = "container" style = "display: flex; flex-direction: column; width: 700px;">
                 <div style = "display: flex; flex-direction: column">
                 <div style = "width: 600px">
                 <p style = "margin: 20px"> In the world of animation, few names are as revered as Hayao Miyazaki, 
@@ -93,25 +108,31 @@
                     that characterized Miyazaki, Takahata, and other directors' contributions to Studio Ghibli, 
                     examining key details between their respective films. </p>
                 </div>
-                <img class="floating" src = "totoro.png" width = 8%  style="margin-left: 600; margin-top: 10; position: absolute" > </img>
+                <img class="floating" src = "totoro.png" width = 18%  style="margin-left: 600; margin-top: 10; position: absolute" > </img>
                 </div>  
+             
                 <svg class="timeline" id = "timeline" style="margin: 20px; height: 2000px; width: 700px; "></svg>
+               <div data-scrolly-down="blurInBottom" class = "overlay1" style = "width: 300px; padding: 20px">
+                   <h3> What happened here?</h3>
+                   <p> <i>Pom Poko</i>, directed by Takahata in 1994, spiked in revenue</p>
+                </div> 
+
 
             </div>
                 <div style = "display: flex; flex-direction: column; position: fixed; margin-left: 750;">
                     <div class = "select" id = "button-bar" style="margin: 20px; width: 600px; display: flex; justify-content: center; align-items: center;"> </div>
                     <svg class = "linechart" id = "linechart" style="margin: 20px; height: 450px; width: 600px; "> </svg>
-                    <!-- https://github.com/edriessen/scrollytelling-scrollama-d3-demo?tab=readme-ov-file 
-                    for scrolly library -->
-                   
                 </div>
             </div>
+
+            
+        
     </body>
 
     <script>
         const requestData = async function(){
             const ghibliData = await d3.csv("studio-ghibli.csv");
-            console.log(ghibliData);
+            //console.log(ghibliData);
 
             // duration conversion
             function convertDuration(duration) {
@@ -258,9 +279,9 @@
                     .style("font-style", "italic")
 
                 label.append("tspan").text(film["Director"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter")
-                label.append("tspan").text("Budget: "+film["Budget"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkred")
-                label.append("tspan").text("Revenue: "+film["Revenue"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkgreen")
-                label.append("tspan").text("Duration: "+film["Duration"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkblue")
+                label.append("tspan").text("Budget: $"+film["Budget"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkred")
+                label.append("tspan").text("Revenue: $"+film["Revenue"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkgreen")
+                label.append("tspan").text("Duration: "+film["Duration"]+" minutes").attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkblue")
 
                 labelWidth = d3.select(this).datum()["Name"].length 
 
@@ -302,12 +323,23 @@
                         
             // line plots!
             let lineplot = d3.select("#linechart")
+            
             const annotations2 = lineplot.append("g").attr("id","annotations");
             const width2 = 600 
             const height2 = 450
             const margin2 = {top: 10, right: 10, bottom: 50, left: 50};
             const chartWidth2 = width2 - margin2.left - margin2.right;
             const chartHeight2 = height2 - margin2.top - margin2.bottom;
+
+            let backgroundRect = lineplot.insert('rect', ':first-child') // places it on the bottom of the svg
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', width2)
+                .attr('height', height2)
+                .style("opacity", ".3")
+                .style("rx", 10)
+                .style("ry", 10)
+                .style("fill", "beige");
             
             let chartArea = lineplot.append("g").attr("transform","translate("+margin2.left+","+margin2.top+")");
 
@@ -316,6 +348,8 @@
             let xAxis = annotations2.append('g')
                      .attr('transform',`translate(${margin2.left},${chartHeight2+margin2.top+10})`) 
 
+            
+               
             function loadLine(plotType) {
 
                 type = plotType
@@ -382,7 +416,7 @@
                     exit => exit.remove()
         );
             // adding circles
-                chartArea.selectAll("circle.point")
+                let circles = chartArea.selectAll("circle.point")
                     .data(ghibliData)
                     .join(
                         enter => enter.append("circle")
@@ -399,6 +433,61 @@
                       .attr("cy", d => yScale(d[plotType])) ,
                     exit => exit.remove()
                     )
+
+            // lineplot mouseover
+
+                let labelback2 = lineplot.append("rect").attr("visibility","hidden")    
+                let label2 = lineplot.append("text").attr("visibility","hidden")    
+
+                circles.on("mouseover", function() {
+                    
+                d3.select(this).transition().duration(200)
+                    .attr("r", 10) 
+                    .attr("stroke", "beige")
+                    .attr("stroke-width", 2);
+              
+                let film = d3.select(this).datum()
+                let xloc = 380
+                let yloc = 280
+                let name = film["Name"]
+                let allInfo = name
+
+
+                label2.text(allInfo) 
+                    .attr("x", xloc) 
+                    .attr("y",yloc) 
+                    .attr("visibility", "visible")
+                    .style("font-size", "12")
+                    .style("font-weight", "bold")
+                    .style("text-shadow", "none")
+                    .style("font-style", "italic")
+
+                label2.append("tspan").text(film["Director"]).attr("x", xloc).attr("dy", "2em").style("font-weight", "lighter")
+                label2.append("tspan").text("Budget: $"+film["Budget"]).attr("x",  xloc).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkred")
+                label2.append("tspan").text("Revenue: $"+film["Revenue"]).attr("x", xloc).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkgreen")
+                label2.append("tspan").text("Duration: "+film["Duration"]+" minutes").attr("x",  xloc).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkblue")
+
+                labelback2.style("fill","beige")
+                    .attr("width", 200)
+                    .attr("height", 130)
+                    .attr("visibility","visible")
+                    .attr("x", xloc-10) 
+                    .attr("y", yloc-20) 
+                    .style("stroke-width", "2")
+                    .style("opacity", "0.6")
+                    .style("rx", "5")
+            })
+                circles.on("mouseout", function() {
+                    console.log("moused out!")
+               
+                    d3.select(this).transition().duration(200)
+                        .attr("r", 3) 
+                        .attr("stroke", "none");
+
+
+                });
+          
+
             }
         // button bar
         const plotTypes = ["Budget", "Revenue", "Duration"]
@@ -419,7 +508,14 @@
             d3.select(`button#Budget`)  // Use the ID to select the button
             .style('background-color', "rgb(230, 163, 19)")
             .style("text-decoration", "underline");
-        loadLine("Budget");
+            loadLine("Budget");
+
+          
+        // scrolly functionality
+        window.onload = function() {
+          scrolly();
+        }; 
+
     }
         requestData();
 
