@@ -633,16 +633,13 @@
                     .attr("x", xloc-10) 
                     .attr("y", yloc-20) 
                     .style("stroke-width", "2")
-                    .style("opacity", "0.6")
                     .style("rx", "5")
             })
                 circles.on("mouseout", function() {
-                    console.log("moused out!")
                
                     d3.select(this).transition().duration(200)
                         .attr("r", 3) 
                         .attr("stroke", "none");
-
 
                 });
           
@@ -664,7 +661,7 @@
                 loadLine(d);
             })
         })
-            d3.select(`button#Budget`)  // Use the ID to select the button
+            d3.select(`button#Budget`)
             .style('background-color', "rgb(230, 163, 19)")
             .style("text-decoration", "underline");
             loadLine("Budget");
