@@ -1,679 +1,768 @@
 <html>
-    <head>
-        <title>Studio Ghibli Directors</title>
-        <script src="https://d3js.org/d3.v5.min.js"></script>
-        <script src="https://d3js.org/d3-array.v2.min.js"></script>
-        <script type="text/javascript" src="scrolly.js"></script>
-    
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="cssanimation.css"> 
-
-        <style>
-        html, body{
-            height: 315%;
-            padding: 10px;
-            font-family: Georgia, 'Times New Roman', Times, serif;
-            color: beige; 
-            text-shadow:2px 2px 4px #0000008f;
-        }
-        .bg{
-            background-image: url("ghibli-background.png");
-            height: 100%;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-color: rgba(255, 255, 255, 0.3);
-            background-blend-mode: overlay;
-        }
-
-        .floating {  
-            animation-name: floating;
-            animation-duration: 2s;
-            animation-iteration-count: infinite;
-            animation-timing-function: ease-in-out;
-            margin-left: 30px;
-            margin-top: 5px;
-        }
-        @keyframes floating { 
-            0% { transform: translate(0,  0px); }
-            50%  { transform: translate(0, 15px); }
-            100%   { transform: translate(0, -0px); }    
-        }
-        a{
-            color: rgb(222, 152, 0);
-            text-shadow:2px 2px 4px #0000008f;
-
-        }
-        .plotTypes{
-            padding: 10px;
-            margin-right: 20px;
-            width: 150px;
-            font-family: Georgia, 'Times New Roman', Times, serif;
-            border-radius: 10px;
-            background-color: beige;
-            border: none;
-        }
-        @keyframes shake { 
-            0%, 100% {
-                transform: translateX(0);
-            }
-            10%, 30%, 50%, 70%, 90% {
-                transform: translateY(-5px);
-            }
-            20%, 40%, 60%, 80% {
-                transform: translateY(5px);
-            }
-        }
-        .shake {
-            animation: shake 2s; 
-            animation-iteration-count: infinite;
-        }
-        .container {
-            position: relative;
-        }
-        .overlay1 {
-            position: absolute;
-            top: 900px;
-            left: 400px;
-            background-color:rgba(152, 199, 194, 0.7); 
-            padding: 10px;
-            border-radius: 10px;
-            width: 300px;
-            z-index: 1; 
-        }
-        .overlay2 {
-            position: absolute;
-            top: 1200px;
-            left: 20px;
-            background-color:rgba(152, 199, 194, 0.7); 
-            padding: 10px;
-            border-radius: 10px;
-            width: 300px;
-            z-index: 1;
-        }
-        .overlay3 {
-            position: absolute;
-            top: 350px;
-            left: 20px;
-            background-color:rgba(152, 199, 194, 0.7); 
-            padding: 10px;
-            border-radius: 10px;
-            width: 300px;
-            z-index: 1; 
-        }
-        .overlay4 {
-            position: absolute;
-            top: 1600;
-            left: 400px;
-            background-color:rgba(152, 199, 194, 0.7); 
-            padding: 10px;
-            border-radius: 10px;
-            width: 300px;
-            z-index: 1; 
-        }
-        .overlay5 {
-            position: absolute;
-            top: 1900;
-            left: 20px;
-            background-color:rgba(152, 199, 194, 0.7); 
-            padding: 10px;
-            border-radius: 10px;
-            width: 300px;
-            z-index: 1;
-        }
-        
-        .overlay6{
-            position: absolute;
-            top: 500px;
-            left: 400px;
-            background-color:rgba(179, 152, 199, 0.7); 
-            padding: 10px;
-            border-radius: 10px;
-            width: 300px;
-            z-index: 1;
-        }
-        
-        .overlay7{
-            position: absolute;
-            top: 950px;
-            left: 20px;
-            background-color:rgba(179, 152, 199, 0.7); 
-            padding: 10px;
-            border-radius: 10px;
-            width: 300px;
-            z-index: 1;
-        }
-        
-        .overlay8{
-            position: absolute;
-            top: 1300px;
-            left: 400px;
-            background-color:rgba(179, 152, 199, 0.7); 
-            padding: 10px;
-            border-radius: 10px;
-            width: 300px;
-            z-index: 1;
-        }
-        .overlay9{
-            position: absolute;
-            top: 1640;
-            left: 20px;
-            background-color:rgba(179, 152, 199, 0.7); 
-            padding: 10px;
-            border-radius: 10px;
-            width: 300px;
-            z-index: 1;
-        }
-        .overlay10{
-            position: absolute;
-            top: 1940;
-            left: 400px;
-            background-color:rgba(179, 152, 199, 0.7); 
-            padding: 10px;
-            border-radius: 10px;
-            width: 300px;
-            z-index: 1;
-        }
-        
-        
-        
-
-        </style>
-    </head>
-
-    <body class = "bg">
-        <div style = "display: flex; align-items:center; flex-direction: column;">
-            <h1 style = "margin: 10px"> <i>My Neighbor Takahata:</i> A Studio Ghibli Director Analysis </h1>
-            <!-- <img class="floating" src = "ponyo.png" width = 180 height = 180 style="margin-left: 1200; position: absolute" > </img> -->
-            <p>by Carly Hu (ch862) and Myna Lim (ml2326)</p>
-            <h2 style = "background-color: rgb(4, 88, 96);"> "I gave Isao Takahata 15 years of my youth. I want them back!" - Hayao Miyazaki</h2>
-        </div>
-
-       
-        <div style = "display: flex; flex-direction: row;">
-            <div class = "container" style = "display: flex; flex-direction: column; width: 700px;">
-                <div style = "display: flex; flex-direction: column">
-                <div style = "width: 600px">
-                <p style = "margin: 20px"> In the world of animation, few names are as revered as Hayao Miyazaki, 
-                    the pioneering spirit behind <a href = "https://en.wikipedia.org/wiki/Studio_Ghibli">Studio Ghibli</a>. 
-                    Somewhat less popular is that of Isao Takahata's: another Ghibli director who had a thriving partnership and eventual divergence from Miyazaki. 
-                    In his 2018 biography, Toshio Suzuki (President of Studio Ghibli) provides a glimpse into the
-                    complexities of this <a href = "http://takara-bako.com/index.php/2021/01/21/miyazaki-takahatas-work-relationship-and-how-it-ended/">relationship</a>.</p>
-                    <p style = "margin: 20px">In this article, we will use <a href = "https://www.kaggle.com/datasets/shruthiiiee/studio-ghibli-dataset">data</a> to explore the differences
-                    that characterized Miyazaki, Takahata, and other directors' contributions to Studio Ghibli, 
-                    examining key details between their respective films. </p>
-                </div>
-                <img class="floating" src = "totoro.png" width = 18%  style="margin-left: 600; margin-top: 10; position: absolute" > </img>
-                </div>  
-             
-                <svg class="timeline" id = "timeline" style="margin: 20px; height: 2000px; width: 700px; "></svg>
-                
-                <div data-scrolly-down="blurInBottom, duration:1s" data-scrolly-offset-top="400px" data-scrolly-offset-bottom="400px" class = "overlay3" style = "width: 300px; padding: 20px">
-                    <h3> Humble beginnings</h3>
-                    <p> Here, Miyazaki begins to direct films for Studio Ghibli four years before Takahata's first film. He releases <i>Nausicaa of the Valley of the Wind</i> in 1984, 
-                        <i>Castle in the Sky</i> in 1986, and <i>My Neighbor Totoro</i> in 1988, each film with a higher budget than the previous.</p>
-                    <p>One should pay close attention to Takahata's first 1988 film, <i>Grave of the Fireflies</i>, which was budgeted the same amount as <i>My Neighbor Totoro</i>, but
-                    resulted in a revenue that was <b>less than one-eighth of its competition.</b> </p>
-             
-                 </div> 
-                 
-                 <div data-scrolly-down="blurInBottom, duration:1s" data-scrolly-offset-top="400px" data-scrolly-offset-bottom="400px" class = "overlay6" style = "width: 300px; padding: 20px">
-                    <p> "According to Suzuki, in the first half of the 55 years Miyazaki and Takahata had spent together, the two of them shared a favorable relationship. Not so much in the second half, though."
-                    </p>
-             
-                 </div> 
-
-               <div data-scrolly-down="blurInBottom, duration:1s"data-scrolly-offset-top="400px" data-scrolly-offset-bottom="400px"  class = "overlay1" style = "width: 300px; padding: 20px">
-                   <h3> Takahata on the rise?</h3>
-                   <p> <i>My Neighbor the Yamadas</i>, directed by Takahata in 1999, had a budget of $20.5 million:
-                    this is the first time we see one of Takahata's films with a greater budget than Miyazaki's films released around the same time.</p>
-                    <p>However, if you click over to the <b style = "color: rgb(230, 163, 19)">revenue</b> tab, you'll find that there has not been a single Takahata film that grossed more than Miyazaki's films.
-                    </p>
-                </div> 
-
-                <div data-scrolly-down="blurInBottom, duration:1s"data-scrolly-offset-top="400px" data-scrolly-offset-bottom="400px"  class = "overlay7" style = "width: 300px; padding: 20px">
-                    <p>"Suzuki [describes] Takahata as someone who 'doesn't get up in the morning' and 'doesn't go to the studio'.
-                         A group effort like a feature-length movie would end up without a director present.
-                        So someone had to drive Takahata from and to the studio everyday since Takahata didn't drive himself. 
-                        At first this person was Miyazaki."</p>
-                 </div> 
-                
-
-                <div data-scrolly-down="blurInBottom, duration:1s" data-scrolly-offset-top="400px"  data-scrolly-offset-bottom="400px" class = "overlay2" style = "width: 300px; padding: 20px">
-                    <h3> Miyazaki's reign</h3>
-                    <p> Here, Miyazaki enters his career's peak: in the span of only seven years, he directs <i>Spirited Away</i>, <i>Howl's Moving Castle</i>, and <i>Ponyo</i>.
-                        Not only are these Miyazaki's highest grossing films, but they are <b>Studio Ghibli's three highest grossing films of all time.</b></p>
-                    <p>
-                        Though Takahata stands out as a director with <i>The Secret World of Arietty</i> shortly after, with an impressive $150 million in revenue, he still falls short from the
-                        immense financial contribution that Miyazaki's films had towards Studio Ghibli.</p>
-
-             
-                 </div> 
-
-                 <div data-scrolly-down="blurInBottom, duration:1s"data-scrolly-offset-top="400px" data-scrolly-offset-bottom="400px"  class = "overlay8" style = "width: 300px; padding: 20px">
-                    <p>"Takahata didn't do the planning for his projects - ever. For their shared projects, it was always Miyazaki or Suzuki who came up with the plans."</p>
-                 </div> 
-                
-                 <div data-scrolly-down="blurInBottom, duration:1s" data-scrolly-offset-top="400px"  data-scrolly-offset-bottom="400px" class = "overlay4" style = "width: 300px; padding: 20px">
-                    <h3> Unequal profits</h3>
-                    <p> Takahata directs his final film for Studio Ghibli, <i>The Tale of The Princess Kaguya</i> (2013). It is budgeted a whopping $49.3 million, but only grosses $24.3 million for Studio Ghibli.</p>
-                    <p> In the same year, we see Miyazaki direct <i>The Wind Rises</i>, which is budgeted less than Takahata's film ($30 million), but <b>comes out on top once again with an impressive revenue of $117 million.</b></p>
-                 </div> 
-
-                 <div data-scrolly-down="blurInBottom, duration:1s"data-scrolly-offset-top="400px" data-scrolly-offset-bottom="400px"  class = "overlay9" style = "width: 300px; padding: 20px">
-                    <p>"Suzuki speculates that because Takahata was the youngest of seven children, he was a 'natural at taking advantage of other's benevolence'.</p>
-
-                    <p>Basically, Miyazaki was fed up with having to clean up after Takahata who constantly caused stress and extra work for others: 'I gave Isao Takahata 15 years of my youth. <b>I want them back!</b>'"</p>
-                 </div> 
-
-                 <div data-scrolly-down="blurInBottom, duration:1s" data-scrolly-offset-top="400px"  data-scrolly-offset-bottom="400px" class = "overlay5" style = "width: 300px; padding: 20px">
-                    <h3>A lopsided tale</h3>
-                    <p>After taking a trip through Studio Ghibli's timeline, it is quite evident that Miyazaki was a more successful Ghibli director than his counterpart Takahata. 
-                    </p><p>Their films collectively illustrate how director personality and diligence can indeed have an impact on box office success.</p>
-                 </div> 
-
-                 <div data-scrolly-down="blurInBottom, duration:1s"data-scrolly-offset-top="400px" data-scrolly-offset-bottom="400px"  class = "overlay10" style = "width: 300px; padding: 20px">
-                 <p>"[A]fter losing Miyazaki, Takahata realized that he had no one to fill this gap. This despair 'escalated as irritation'.</p>
-                 <p>On the other hand, it was also Miyazaki's biggest wish to work once more on a movie with Takahata as the director." </p>
-                </div> 
-
-            </div>
-                <div style = "display: flex; flex-direction: column; position: fixed; margin-left: 750;">
-                    <div class = "select" id = "button-bar" style="margin: 20px; width: 600px; display: flex; justify-content: center; align-items: center;"> </div>
-                    <svg class = "linechart" id = "linechart" style="margin: 20px; height: 450px; width: 600px; "> </svg>
-                </div>
-            </div>
-
-            
-        
-    </body>
-
-    <script>
-        const requestData = async function(){
-            const ghibliData = await d3.csv("studio-ghibli.csv");
-
-            // duration conversion
-            function convertDuration(duration) {
-                const regex = /(?:(\d+)h)?\s*(?:(\d+)m)?/;
-                const match = duration.match(regex);
-                const hours = parseInt(match[1]) || 0;  
-                const minutes = parseInt(match[2]) || 0;  
-                return hours * 60 + minutes;
-            }
-            
-            //string -> int
-            ghibliData.forEach(d => {
-                    d.Budget = +d.Budget.replace(/\D/g, ''); 
-                    });
-                ghibliData.forEach(d => {
-                    d.Revenue = +d.Revenue.replace(/\D/g, ''); 
-                    });
-                ghibliData.forEach(d => {
-                    d.Year = +d.Year.replace(/\D/g, ''); 
-                    });
-                ghibliData.forEach(d => {
-                    d.Duration = convertDuration(d.Duration);
-                })
-            ghibliData.sort((a, b) => a.Year - b.Year);
+   <head>
+       <title>Studio Ghibli Directors</title>
+       <script src="https://d3js.org/d3.v5.min.js"></script>
+       <script src="https://d3js.org/d3-array.v2.min.js"></script>
+       <script type="text/javascript" src="scrolly.js"></script>
+  
+       <link rel="preconnect" href="https://fonts.googleapis.com">
+       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+       <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+       <link rel="stylesheet" href="cssanimation.css">
 
 
-            const svg = d3.select("#timeline")
-            let margin = { top: 50, bottom: 40, right: 35, left: 200 }
-            const width = svg.attr("width");
-            const height = svg.attr("height");
-            const chartWidth = width - margin.left - margin.right;
-            const chartHeight = height - margin.top - margin.bottom;
-            let annotations = svg.append("g").attr("id","annotations");
-
-            // timeline top labels
-            svg.append('rect')
-                .attr('x', 53)
-                .attr('y', 41)
-                .attr('width', 245)
-                .style("text-anchor", "middle")
-                .attr('height', 25)
-                .attr('fill', 'beige')
-                .attr("opacity", 0.6)
-                .attr("rx", "5")
-            svg.append('text')
-                .text("Isao Takahata / Others")
-                .attr('x', 175)
-                .attr('y', 60)
-                .style("font-weight", "bold")
-                .style("text-anchor", "middle")
-                .attr('font-size', '20px')
-                .style('fill', "rgb(222, 152, 0)")
-                .style('text-shadow', 'none');
-            svg.append('rect')
-                .attr('x', 438)
-                .attr('y', 41)
-                .attr('width', 175)
-                .style("text-anchor", "middle")
-                .attr('height', 25)
-                .attr('fill', 'beige')
-                .attr("opacity", 0.6)
-                .attr("rx", "5")
-            svg.append('text')
-                .text("Hayao Miyazaki")
-                .attr('x', 175+350)
-                .attr('y', 60)
-                .style("font-weight", "bold")
-                .style("text-anchor", "middle")
-                .attr('font-size', '20px')
-                .style('fill', "rgb(4, 88, 96)")
-                .style('text-shadow', 'none');
-
-            // create scale
-            const yearExtent = d3.extent(ghibliData, d => d.Year);
-            const yearScale = d3.scaleLinear()
-                .domain(yearExtent)
-                .range([100, 1900]);
-
-            const directors = d3.map(ghibliData, d => d.Director)
-            const directorScale = d3.scaleBand()
-                .domain(directors)
-                .range([chartWidth/2-chartWidth/4, chartWidth/2+chartWidth/4])
-                .padding([0.2]);
-            
-            // draw timeline
-            let leftAxis = d3.axisLeft(yearScale).tickFormat(d3.format(''));
-            annotations.append("g")
-                    .attr("class", "y axis")
-                    .attr("transform",`translate(${margin.left+170},${0})`)
-                    .style('text-shadow', 'none')
-                    .style("font-size", "18px")
-                    .style("font-family", "Georgia")
-                    .style("stroke", "black")
-                    .call(leftAxis)
-                    .selectAll("line")
-                    .style("fill", "black")
-                    .style("stroke", "black"); // change tick line color
-            annotations.select(".y.axis path").style("stroke", "black"); 
-            annotations.selectAll(".y.axis text").style("fill", "black"); 
-
-            annotations.raise();
-
-            ghibliData.forEach( d => {
-                        d.x = d.Director === "Hayao Miyazaki" ? 340+145 : 340-160;
-                        d.y = yearScale(d.Year) ;
-                    });
-
-            // adding in data 
-            let images = svg.selectAll("image").data(ghibliData)
-                .join("image")
-                .attr("xlink:href", "dust.png")
-                .attr("width", 50)
-                .attr("x", d => d.Director === "Hayao Miyazaki" ? 340+145 : 340-160)
-                .attr("y", d => yearScale(d.Year)  );
-
-            let labelback= svg.append("rect").attr("visibility","hidden")    
-            let label = svg.append("text").attr("visibility","hidden")    
-
-            // hover functionality
-            images.on("mouseover", function() {
-                console.log(d3.select(this).attr("width"))
-                d3.select(this).attr("width", 80) 
-                              .attr("height",80)
-                              .classed("shake", true);  
-        
-                let film = d3.select(this).datum()
-
-                let name = film["Name"]
-                let allInfo = name
-
-                if (d3.select(this).datum().x > 200){
-                    side = d3.select(this).datum().x + 60
-                } else {
-                    side = d3.select(this).datum().x - 160
-                }
-
-                label.text(allInfo) 
-                    .attr("x", side) 
-                    .attr("y", (film.y + 0)) 
-                    .attr("visibility", "visible")
-                    .style("font-size", "12")
-                    .style("font-weight", "bold")
-                    .style("text-shadow", "none")
-                    .style("font-style", "italic")
-
-                label.append("tspan").text(film["Director"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter")
-                label.append("tspan").text("Budget: $"+film["Budget"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkred")
-                label.append("tspan").text("Revenue: $"+film["Revenue"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkgreen")
-                label.append("tspan").text("Duration: "+film["Duration"]+" minutes").attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkblue")
-
-                labelWidth = d3.select(this).datum()["Name"].length 
-
-                labelback.style("fill","beige")
-                    .attr("width", 200)
-                    .attr("height", 130)
-                    .attr("visibility","visible")
-                    .attr("x", side - 10) 
-                    .attr("y", (d3.select(this).datum().y - 20)) 
-                    .style("stroke-width", "2")
-                    .style("opacity", "0.6")
-                    .style("rx", "5")
-
-                // affect line graph during hover
-                let correspondingCircle = chartArea.selectAll("circle.point").filter(d => d.Name === film.Name);
-                correspondingCircle.transition().duration(200)
-                    .attr("r", 10) 
-                    .attr("stroke", "beige")
-                    .attr("stroke-width", 2);
-
-            });
-
-            images.on("mouseout", function() {
-
-                d3.select(this).attr("width", 50)
-                d3.select(this).attr("height", 50)
+       <style>
+       html, body{
+           height: 315%;
+           padding: 10px;
+           font-family: Georgia, 'Times New Roman', Times, serif;
+           color: beige;
+           text-shadow:2px 2px 4px #0000008f;
+       }
+       .bg{
+           background-image: url("ghibli-background.png");
+           height: 100%;
+           background-repeat: no-repeat;
+           background-size: cover;
+           background-color: rgba(255, 255, 255, 0.3);
+           background-blend-mode: overlay;
+       }
 
 
-                let film = d3.select(this).datum();
-                let correspondingCircle = chartArea.selectAll("circle.point").filter(d => d.Name === film.Name);
-                correspondingCircle.transition().duration(200)
-                    .attr("r", 3) 
-                    .attr("stroke", "none");
-                
-                d3.select(this).attr("width", 50) 
-                            .attr("height",50)
-                            .classed("shake", false);  
-            });
-                        
-            // line plots!
-            let lineplot = d3.select("#linechart")
-            
-            const annotations2 = lineplot.append("g").attr("id","annotations");
-            const width2 = 600 
-            const height2 = 450
-            const margin2 = {top: 10, right: 10, bottom: 50, left: 50};
-            const chartWidth2 = width2 - margin2.left - margin2.right;
-            const chartHeight2 = height2 - margin2.top - margin2.bottom;
+       .floating { 
+           animation-name: floating;
+           animation-duration: 2s;
+           animation-iteration-count: infinite;
+           animation-timing-function: ease-in-out;
+           margin-left: 30px;
+           margin-top: 5px;
+       }
+       @keyframes floating {
+           0% { transform: translate(0,  0px); }
+           50%  { transform: translate(0, 15px); }
+           100%   { transform: translate(0, -0px); }   
+       }
+       a{
+           color: rgb(222, 152, 0);
+           text-shadow:2px 2px 4px #0000008f;
 
-            let backgroundRect = lineplot.insert('rect', ':first-child') // places it on the bottom of the svg
-                .attr('x', 0)
-                .attr('y', 0)
-                .attr('width', width2)
-                .attr('height', height2)
-                .style("opacity", ".3")
-                .style("rx", 10)
-                .style("ry", 10)
-                .style("fill", "beige");
-            
-            let chartArea = lineplot.append("g").attr("transform","translate("+margin2.left+","+margin2.top+")");
 
-            let yAxis = annotations2.append('g')
-                        .attr('transform',`translate(${margin2.left-10},${margin2.top})`)
-            let xAxis = annotations2.append('g')
-                     .attr('transform',`translate(${margin2.left},${chartHeight2+margin2.top+10})`) 
+       }
+       .plotTypes{
+           padding: 10px;
+           margin-right: 20px;
+           width: 150px;
+           font-family: Georgia, 'Times New Roman', Times, serif;
+           border-radius: 10px;
+           background-color: beige;
+           border: none;
+       }
+       @keyframes shake {
+           0%, 100% {
+               transform: translateX(0);
+           }
+           10%, 30%, 50%, 70%, 90% {
+               transform: translateY(-5px);
+           }
+           20%, 40%, 60%, 80% {
+               transform: translateY(5px);
+           }
+       }
+       .shake {
+           animation: shake 2s;
+           animation-iteration-count: infinite;
+       }
+       .container {
+           position: relative;
+       }
+       .overlay1 {
+           position: absolute;
+           top: 900px;
+           left: 400px;
+           background-color:rgba(152, 199, 194, 0.7);
+           padding: 10px;
+           border-radius: 5px;
+           width: 300px;
+           z-index: 1;
+       }
+       .overlay2 {
+           position: absolute;
+           top: 1200px;
+           left: 20px;
+           background-color:rgba(152, 199, 194, 0.7);
+           padding: 10px;
+           border-radius: 5px;
+           width: 300px;
+           z-index: 1;
+       }
+       .overlay3 {
+           position: absolute;
+           top: 350px;
+           left: 20px;
+           background-color:rgba(152, 199, 194, 0.7);
+           padding: 10px;
+           border-radius: 5px;
+           width: 300px;
+           z-index: 1;
+       }
+       .overlay4 {
+           position: absolute;
+           top: 1600;
+           left: 400px;
+           background-color:rgba(152, 199, 194, 0.7);
+           padding: 10px;
+           border-radius: 5px;
+           width: 300px;
+           z-index: 1;
+       }
+       .overlay5 {
+           position: absolute;
+           top: 1900;
+           left: 20px;
+           background-color:rgba(152, 199, 194, 0.7);
+           padding: 10px;
+           border-radius: 5px;
+           width: 300px;
+           z-index: 1;
+       }
+      
+       .overlay6{
+           position: absolute;
+           top: 500px;
+           left: 400px;
+           background-color:rgba(179, 152, 199, 0.7);
+           padding: 10px;
+           border-radius: 5px;
+           width: 300px;
+           z-index: 1;
+       }
+      
+       .overlay7{
+           position: absolute;
+           top: 950px;
+           left: 20px;
+           background-color:rgba(179, 152, 199, 0.7);
+           padding: 10px;
+           border-radius: 5px;
+           width: 300px;
+           z-index: 1;
+       }
+      
+       .overlay8{
+           position: absolute;
+           top: 1300px;
+           left: 400px;
+           background-color:rgba(179, 152, 199, 0.7);
+           padding: 10px;
+           border-radius: 5px;
+           width: 300px;
+           z-index: 1;
+       }
+       .overlay9{
+           position: absolute;
+           top: 1640;
+           left: 20px;
+           background-color:rgba(179, 152, 199, 0.7);
+           padding: 10px;
+           border-radius: 5px;
+           width: 300px;
+           z-index: 1;
+       }
+       .overlay10{
+           position: absolute;
+           top: 1940;
+           left: 400px;
+           background-color:rgba(179, 152, 199, 0.7);
+           padding: 10px;
+           border-radius: 5px;
+           width: 300px;
+           z-index: 1;
+       }
+       .close-button {
+           position: absolute;
+           top: 10px;
+           right: 10px;
+           cursor: pointer;
+           font-size: 20px;
+           font-weight: bold;
+           color: white;
+       }
+      
+      
+      
 
-            
-               
-            function loadLine(plotType) {
 
-                type = plotType
-                const xScale = d3.scaleLinear().domain(yearExtent).range([0, chartWidth2]);
-                const extent = d3.extent(ghibliData, d => d[plotType]);
+       </style>
+   </head>
 
-                let yScale = d3.scaleLog().domain(extent).range([chartHeight2,0])
-                if (type ==="Duration"){
-                    yScale = d3.scaleLinear().domain(extent).range([chartHeight2,0])
-                }
 
-                let leftAxis2 = d3.axisLeft(yScale).tickFormat(d3.format(".2s"))
-                let leftGridlines2 = d3.axisLeft(yScale)
-                        .tickSize(-chartWidth2-10)
-                        .tickFormat("");
-                
-                yAxis.call(leftAxis2)
-                .selectAll('path,line').style('stroke', 'black');
-                yAxis.selectAll('text').style('fill', 'black').style("text-shadow", "none");
+   <body class = "bg">
+       <div style = "display: flex; align-items:center; flex-direction: column;">
+           <h1 style = "margin: 10px"> <i>My Neighbor Takahata:</i> A Studio Ghibli Director Analysis </h1>
+           <!-- <img class="floating" src = "ponyo.png" width = 180 height = 180 style="margin-left: 1200; position: absolute" > </img> -->
+           <p>by Carly Hu (ch862) and Myna Lim (ml2326)</p>
+           <h2 style = "background-color: rgb(4, 88, 96);"> "I gave Isao Takahata 15 years of my youth. I want them back!" - Hayao Miyazaki</h2>
+       </div>
 
-                let bottomAxis = d3.axisBottom(xScale).tickFormat(d3.format(".0f"));
-                xAxis.call(bottomAxis)
-                .selectAll('path,line').style('stroke', 'black');
-                xAxis.selectAll('text').style('fill', 'black').style("text-shadow", "none");
 
-                const miyazakiData = ghibliData.filter(d => d.Director === "Hayao Miyazaki");
-                const othersData = ghibliData.filter(d => d.Director !== "Hayao Miyazaki");
-
-                const lineGenerator= d3.line()
-                    .x(d => xScale(d['Year']))
-                    .y(d => yScale(d[plotType]))
-                    .curve(d3.curveCatmullRom);  
+     
+       <div style = "display: flex; flex-direction: row;">
+           <div class = "container" style = "display: flex; flex-direction: column; width: 700px;">
+               <div style = "display: flex; flex-direction: column">
+               <div style = "width: 600px">
+               <p style = "margin: 20px"> In the world of animation, few names are as revered as Hayao Miyazaki,
+                   the pioneering spirit behind <a href = "https://en.wikipedia.org/wiki/Studio_Ghibli">Studio Ghibli</a>.
+                   Somewhat less popular is that of Isao Takahata's: another Ghibli director who had a thriving partnership and eventual divergence from Miyazaki.
+                   In his 2018 biography, Toshio Suzuki (President of Studio Ghibli) provides a glimpse into the
+                   complexities of this <a href = "http://takara-bako.com/index.php/2021/01/21/miyazaki-takahatas-work-relationship-and-how-it-ended/">relationship</a>.</p>
+                   <p style = "margin: 20px">In this article, we will use <a href = "https://www.kaggle.com/datasets/shruthiiiee/studio-ghibli-dataset">data</a> to explore the differences
+                   that characterized Miyazaki, Takahata, and other directors' contributions to Studio Ghibli,
+                   examining key details between their respective films. </p>
+               </div>
+               <img class="floating" src = "totoro.png" width = 18%  style="margin-left: 600; margin-top: 10; position: absolute" > </img>
+               </div> 
+           
+               <svg class="timeline" id = "timeline" style="margin: 20px; height: 2000px; width: 700px; "></svg>
               
-            // miyazaki line
-            chartArea.selectAll('path.miyazaki-line')
-                    .data([miyazakiData])  
-                    .join(
-                        enter => enter.append('path')
-                            .attr('class', 'miyazaki-line')
-                            .attr('fill', 'none')
-                            .attr('stroke', 'rgb(4, 88, 96)')
-                            .attr('stroke-width', 2)
-                            .attr('d', lineGenerator),
-                        update => update
-                            .transition()  
-                            .duration(500)
-                            .attr('d', lineGenerator),
-                        exit => exit.remove()
-                    );
-            // takahata line 
-            chartArea.selectAll('path.others-line')
-                .data([othersData]) 
-                .join(
-                    enter => enter.append('path')
-                        .attr('class', 'others-line')
-                        .attr('fill', 'none')
-                        .attr('stroke', 'rgb(230, 163, 19)')
-                        .attr('stroke-width', 2)
-                        .attr('d', lineGenerator),
-                    update => update
-                        .transition()  
-                        .duration(500)
-                        .attr('d', lineGenerator),
-                    exit => exit.remove()
-        );
-            // adding circles
-                let circles = chartArea.selectAll("circle.point")
-                    .data(ghibliData)
-                    .join(
-                        enter => enter.append("circle")
-                        .attr("class","point")
-                    .attr("cx", d => xScale(d['Year']))
-                    .attr("cy", d => yScale( d[plotType]))
-                    .attr("r", 3)
-                    .attr("opacity", 1)
-                    .style("fill", d => d.Director === "Hayao Miyazaki" ? 'rgb(4, 88, 96)' : 'rgb(230, 163, 19)'),
-                    update => update
-                        .transition()  
-                        .duration(500)
-                        .attr("cx", d => xScale(d['Year'])) 
-                      .attr("cy", d => yScale(d[plotType])) ,
-                    exit => exit.remove()
-                    )
-
-            // lineplot mouseover
-
-                let labelback2 = lineplot.append("rect").attr("visibility","hidden")    
-                let label2 = lineplot.append("text").attr("visibility","hidden")    
-
-                circles.on("mouseover", function() {
-                    
-                d3.select(this).transition().duration(200)
-                    .attr("r", 10) 
-                    .attr("stroke", "beige")
-                    .attr("stroke-width", 2);
-              
-                let film = d3.select(this).datum()
-                let xloc = 380
-                let yloc = 280
-                let name = film["Name"]
-                let allInfo = name
-
-
-                label2.text(allInfo) 
-                    .attr("x", xloc) 
-                    .attr("y",yloc) 
-                    .attr("visibility", "visible")
-                    .style("font-size", "12")
-                    .style("font-weight", "bold")
-                    .style("text-shadow", "none")
-                    .style("font-style", "italic")
-
-                label2.append("tspan").text(film["Director"]).attr("x", xloc).attr("dy", "2em").style("font-weight", "lighter")
-                label2.append("tspan").text("Budget: $"+film["Budget"]).attr("x",  xloc).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkred")
-                label2.append("tspan").text("Revenue: $"+film["Revenue"]).attr("x", xloc).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkgreen")
-                label2.append("tspan").text("Duration: "+film["Duration"]+" minutes").attr("x",  xloc).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkblue")
-
-                labelback2.style("fill","beige")
-                    .attr("width", 200)
-                    .attr("height", 130)
-                    .attr("visibility","visible")
-                    .attr("x", xloc-10) 
-                    .attr("y", yloc-20) 
-                    .style("stroke-width", "2")
-                    .style("rx", "5")
-            })
-                circles.on("mouseout", function() {
+               <div data-scrolly-down="blurInBottom, duration:2s" data-scrolly-offset-top="300px" data-scrolly-offset-bottom="300px" class = "overlay3" style = "width: 300px; padding: 20px">
+                   <h3> Humble beginnings</h3>
+                   <p> Here, Miyazaki begins to direct films for Studio Ghibli four years before Takahata's first film. He releases <i>Nausicaa of the Valley of the Wind</i> in 1984,
+                       <i>Castle in the Sky</i> in 1986, and <i>My Neighbor Totoro</i> in 1988, each film with a higher budget than the previous.</p>
+                   <p>One should pay close attention to Takahata's first 1988 film, <i>Grave of the Fireflies</i>, which was budgeted the same amount as <i>My Neighbor Totoro</i>, but
+                   resulted in a revenue that was <b>less than one-eighth of its competition.</b> </p>
+           
+                </div>
                
-                    d3.select(this).transition().duration(200)
-                        .attr("r", 3) 
-                        .attr("stroke", "none");
+                <div data-scrolly-down="blurInBottom, duration:2s" data-scrolly-offset-top="300px" data-scrolly-offset-bottom="300px" class = "overlay6" style = "width: 300px; padding: 20px">
+                   <p> "According to Suzuki, in the first half of the 55 years Miyazaki and Takahata had spent together, the two of them shared a favorable relationship. Not so much in the second half, though."
+                   </p>
+           
+                </div>
 
-                });
-          
 
-            }
-        // button bar
-        const plotTypes = ["Budget", "Revenue", "Duration"]
-          plotTypes.forEach(d => {
+              <div data-scrolly-down="blurInBottom, duration:2s"data-scrolly-offset-top="300px" data-scrolly-offset-bottom="300px"  class = "overlay1" style = "width: 300px; padding: 20px">
+                  <h3> Takahata on the rise?</h3>
+                  <p> <i>My Neighbor the Yamadas</i>, directed by Takahata in 1999, had a budget of $20.5 million:
+                   this is the first time we see one of Takahata's films with a greater budget than Miyazaki's films released around the same time.</p>
+                   <p>However, if you click over to the <b style = "color: rgb(230, 163, 19)">revenue</b> tab, you'll find that there has not been a single Takahata film that grossed more than Miyazaki's films.
+                   </p>
+               </div>
 
-            d3.select("div#button-bar")
-              .append("button")
-              .attr("id", `${d}`)
-              .attr("class", "plotTypes")
-              .text(d)
-              .on("click", function () {
-                d3.selectAll("button.plotTypes").style('background-color', "beige").style("text-decoration", "none");
-                d3.select(this).style("background-color", "rgb(230, 163, 19)")
-                plotType = d;
-                loadLine(d);
-            })
-        })
-            d3.select(`button#Budget`)
-            .style('background-color', "rgb(230, 163, 19)")
-            .style("text-decoration", "underline");
-            loadLine("Budget");
+
+               <div data-scrolly-down="blurInBottom, duration:2s"data-scrolly-offset-top="300px" data-scrolly-offset-bottom="300px"  class = "overlay7" style = "width: 300px; padding: 20px">
+                   <p>"Suzuki [describes] Takahata as someone who 'doesn't get up in the morning' and 'doesn't go to the studio'.
+                        A group effort like a feature-length movie would end up without a director present.
+                       So someone had to drive Takahata from and to the studio everyday since Takahata didn't drive himself.
+                       At first this person was Miyazaki."</p>
+                </div>
+              
+
+
+               <div data-scrolly-down="blurInBottom, duration:2s" data-scrolly-offset-top="300px"  data-scrolly-offset-bottom="300px" class = "overlay2" style = "width: 300px; padding: 20px">
+                   <h3> Miyazaki's reign</h3>
+                   <p> Here, Miyazaki enters his career's peak: in the span of only seven years, he directs <i>Spirited Away</i>, <i>Howl's Moving Castle</i>, and <i>Ponyo</i>.
+                       Not only are these Miyazaki's highest grossing films, but they are <b>Studio Ghibli's three highest grossing films of all time.</b></p>
+                   <p>
+                       Though Takahata stands out as a director with <i>The Secret World of Arietty</i> shortly after, with an impressive $150 million in revenue, he still falls short from the
+                       immense financial contribution that Miyazaki's films had towards Studio Ghibli.</p>
+
+
+           
+                </div>
+
+
+                <div data-scrolly-down="blurInBottom, duration:2s"data-scrolly-offset-top="300px" data-scrolly-offset-bottom="300px"  class = "overlay8" style = "width: 300px; padding: 20px">
+                   <p>"Takahata didn't do the planning for his projects - ever. For their shared projects, it was always Miyazaki or Suzuki who came up with the plans."</p>
+                </div>
+              
+                <div data-scrolly-down="blurInBottom, duration:2s" data-scrolly-offset-top="300px"  data-scrolly-offset-bottom="300px" class = "overlay4" style = "width: 300px; padding: 20px">
+                   <h3> Unequal profits</h3>
+                   <p> Takahata directs his final film for Studio Ghibli, <i>The Tale of The Princess Kaguya</i> (2013). It is budgeted a whopping $49.3 million, but only grosses $24.3 million for Studio Ghibli.</p>
+                   <p> In the same year, we see Miyazaki direct <i>The Wind Rises</i>, which is budgeted less than Takahata's film ($30 million), but <b>comes out on top once again with an impressive revenue of $117 million.</b></p>
+                </div>
+
+
+                <div data-scrolly-down="blurInBottom, duration:2s"data-scrolly-offset-top="300px" data-scrolly-offset-bottom="300px"  class = "overlay9" style = "width: 300px; padding: 20px">
+                   <p>"Suzuki speculates that because Takahata was the youngest of seven children, he was a 'natural at taking advantage of other's benevolence'.</p>
+
+
+                   <p>Basically, Miyazaki was fed up with having to clean up after Takahata who constantly caused stress and extra work for others: 'I gave Isao Takahata 15 years of my youth. <b>I want them back!</b>'"</p>
+                </div>
+
+
+                <div data-scrolly-down="blurInBottom, duration:2s" data-scrolly-offset-top="300px"  data-scrolly-offset-bottom="300px" class = "overlay5" style = "width: 300px; padding: 20px">
+                   <h3>A lopsided tale</h3>
+                   <p>After taking a trip through Studio Ghibli's timeline, it is quite evident that Miyazaki was a more successful Ghibli director than his counterpart Takahata.
+                   </p><p>Their films collectively illustrate how director personality and diligence can indeed have an impact on box office success.</p>
+                </div>
+
+
+                <div data-scrolly-down="blurInBottom, duration:2s"data-scrolly-offset-top="300px" data-scrolly-offset-bottom="300px"  class = "overlay10" style = "width: 300px; padding: 20px">
+                <p>"[A]fter losing Miyazaki, Takahata realized that he had no one to fill this gap. This despair 'escalated as irritation'.</p>
+                <p>On the other hand, it was also Miyazaki's biggest wish to work once more on a movie with Takahata as the director." </p>
+               </div>
+
+
+           </div>
+               <div style = "display: flex; flex-direction: column; position: fixed; margin-left: 750;">
+                   <div class = "select" id = "button-bar" style="margin: 20px; width: 600px; display: flex; justify-content: center; align-items: center;"> </div>
+                   <svg class = "linechart" id = "linechart" style="margin: 20px; height: 450px; width: 600px; "> </svg>
+               </div>
+           </div>
+
 
           
-        // scrolly functionality
-        window.onload = function() {
-          scrolly();
-        }; 
+      
+   </body>
 
-    }
-        requestData();
 
-    </script>
+   <script>
+       const requestData = async function(){
+           const ghibliData = await d3.csv("studio-ghibli.csv");
+           console.log(ghibliData)
+
+
+           // duration conversion
+           function convertDuration(duration) {
+               const regex = /(?:(\d+)h)?\s*(?:(\d+)m)?/;
+               const match = duration.match(regex);
+               const hours = parseInt(match[1]) || 0; 
+               const minutes = parseInt(match[2]) || 0; 
+               return hours * 60 + minutes;
+           }
+          
+           //string -> int
+           ghibliData.forEach(d => {
+                   d.Budget = +d.Budget.replace(/\D/g, '');
+                   d.Budget  = d.Budget /100;
+                   });
+               ghibliData.forEach(d => {
+                   d.Revenue = +d.Revenue.replace(/\D/g, '');
+                   d.Revenue  = d.Revenue/100;
+                   });
+               ghibliData.forEach(d => {
+                   d.Year = +d.Year.replace(/\D/g, '');
+                   });
+               ghibliData.forEach(d => {
+                   d.Duration = convertDuration(d.Duration);
+               })
+           ghibliData.sort((a, b) => a.Year - b.Year);
+
+
+
+
+           const svg = d3.select("#timeline")
+           let margin = { top: 50, bottom: 40, right: 35, left: 200 }
+           const width = svg.attr("width");
+           const height = svg.attr("height");
+           const chartWidth = width - margin.left - margin.right;
+           const chartHeight = height - margin.top - margin.bottom;
+           let annotations = svg.append("g").attr("id","annotations");
+
+
+           // timeline top labels
+           svg.append('rect')
+               .attr('x', 53)
+               .attr('y', 41)
+               .attr('width', 245)
+               .style("text-anchor", "middle")
+               .attr('height', 25)
+               .attr('fill', 'beige')
+               .attr("opacity", 0.6)
+               .attr("rx", "5")
+           svg.append('text')
+               .text("Isao Takahata / Others")
+               .attr('x', 175)
+               .attr('y', 60)
+               .style("font-weight", "bold")
+               .style("text-anchor", "middle")
+               .attr('font-size', '20px')
+               .style('fill', "rgb(222, 152, 0)")
+               .style('text-shadow', 'none');
+           svg.append('rect')
+               .attr('x', 438)
+               .attr('y', 41)
+               .attr('width', 175)
+               .style("text-anchor", "middle")
+               .attr('height', 25)
+               .attr('fill', 'beige')
+               .attr("opacity", 0.6)
+               .attr("rx", "5")
+           svg.append('text')
+               .text("Hayao Miyazaki")
+               .attr('x', 175+350)
+               .attr('y', 60)
+               .style("font-weight", "bold")
+               .style("text-anchor", "middle")
+               .attr('font-size', '20px')
+               .style('fill', "rgb(4, 88, 96)")
+               .style('text-shadow', 'none');
+
+
+           // create scale
+           const yearExtent = d3.extent(ghibliData, d => d.Year);
+           const yearScale = d3.scaleLinear()
+               .domain(yearExtent)
+               .range([100, 1900]);
+
+
+           const directors = d3.map(ghibliData, d => d.Director)
+           const directorScale = d3.scaleBand()
+               .domain(directors)
+               .range([chartWidth/2-chartWidth/4, chartWidth/2+chartWidth/4])
+               .padding([0.2]);
+          
+           // draw timeline
+           let leftAxis = d3.axisLeft(yearScale).tickFormat(d3.format(''));
+           annotations.append("g")
+                   .attr("class", "y axis")
+                   .attr("transform",`translate(${margin.left+170},${0})`)
+                   .style('text-shadow', 'none')
+                   .style("font-size", "18px")
+                   .style("font-family", "Georgia")
+                   .style("stroke", "black")
+                   .call(leftAxis)
+                   .selectAll("line")
+                   .style("fill", "black")
+                   .style("stroke", "black"); // change tick line color
+           annotations.select(".y.axis path").style("stroke", "black");
+           annotations.selectAll(".y.axis text").style("fill", "black");
+
+
+           annotations.raise();
+
+
+           ghibliData.forEach( d => {
+                       d.x = d.Director === "Hayao Miyazaki" ? 340+145 : 340-160;
+                       d.y = yearScale(d.Year) ;
+                   });
+
+
+           // adding in data
+           let images = svg.selectAll("image").data(ghibliData)
+               .join("image")
+               .attr("xlink:href", "dust.png")
+               .attr("width", 50)
+               .attr("x", d => d.Director === "Hayao Miyazaki" ? 340+145 : 340-160)
+               .attr("y", d => yearScale(d.Year)  );
+
+
+           let labelback= svg.append("rect").attr("visibility","hidden")   
+           let label = svg.append("text").attr("visibility","hidden")   
+
+
+           // hover functionality
+           images.on("mouseover", function() {
+               console.log(d3.select(this).attr("width"))
+               d3.select(this).attr("width", 80)
+                             .attr("height",80)
+                             .classed("shake", true); 
+      
+               let film = d3.select(this).datum()
+
+
+               let name = film["Name"]
+               let allInfo = name
+
+
+               if (d3.select(this).datum().x > 200){
+                   side = d3.select(this).datum().x + 60
+               } else {
+                   side = d3.select(this).datum().x - 160
+               }
+
+
+               label.text(allInfo)
+                   .attr("x", side)
+                   .attr("y", (film.y + 0))
+                   .attr("visibility", "visible")
+                   .style("font-size", "12")
+                   .style("font-weight", "bold")
+                   .style("text-shadow", "none")
+                   .style("font-style", "italic")
+
+
+               label.append("tspan").text(film["Director"]).attr("x", side).attr("dy", "2em").style("font-weight", "lighter")
+               label.append("tspan").text("Budget: $"+film["Budget"].toLocaleString()).attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkred")
+               label.append("tspan").text("Revenue: $"+film["Revenue"].toLocaleString()).attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkgreen")
+               label.append("tspan").text("Duration: "+film["Duration"]+" minutes").attr("x", side).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkblue")
+
+
+               labelWidth = d3.select(this).datum()["Name"].length
+
+
+               labelback.style("fill","beige")
+                   .attr("width", 200)
+                   .attr("height", 130)
+                   .attr("visibility","visible")
+                   .attr("x", side - 10)
+                   .attr("y", (d3.select(this).datum().y - 20))
+                   .style("stroke-width", "2")
+                   .style("opacity", "0.6")
+                   .style("rx", "5")
+
+
+               // affect line graph during hover
+               let correspondingCircle = chartArea.selectAll("circle.point").filter(d => d.Name === film.Name);
+               correspondingCircle.transition().duration(200)
+                   .attr("r", 10)
+                   .attr("stroke", "beige")
+                   .attr("stroke-width", 2);
+
+
+           });
+
+
+           images.on("mouseout", function() {
+
+
+               d3.select(this).attr("width", 50)
+               d3.select(this).attr("height", 50)
+               label
+                   .attr("visibility", "hidden")
+               labelback.attr("visibility", "hidden")
+
+
+               let film = d3.select(this).datum();
+               let correspondingCircle = chartArea.selectAll("circle.point").filter(d => d.Name === film.Name);
+               correspondingCircle.transition().duration(200)
+                   .attr("r", 3)
+                   .attr("stroke", "none");
+              
+               d3.select(this).attr("width", 50)
+                           .attr("height",50)
+                           .classed("shake", false); 
+           });
+                      
+           // line plots!
+           let lineplot = d3.select("#linechart")
+          
+           const annotations2 = lineplot.append("g").attr("id","annotations");
+           const width2 = 600
+           const height2 = 450
+           const margin2 = {top: 10, right: 10, bottom: 50, left: 50};
+           const chartWidth2 = width2 - margin2.left - margin2.right;
+           const chartHeight2 = height2 - margin2.top - margin2.bottom;
+
+
+           let backgroundRect = lineplot.insert('rect', ':first-child') // places it on the bottom of the svg
+               .attr('x', 0)
+               .attr('y', 0)
+               .attr('width', width2)
+               .attr('height', height2)
+               .style("opacity", ".3")
+               .style("rx", 10)
+               .style("ry", 10)
+               .style("fill", "beige");
+          
+           let chartArea = lineplot.append("g").attr("transform","translate("+margin2.left+","+margin2.top+")");
+
+
+           let yAxis = annotations2.append('g')
+                       .attr('transform',`translate(${margin2.left-10},${margin2.top})`)
+           let xAxis = annotations2.append('g')
+                    .attr('transform',`translate(${margin2.left},${chartHeight2+margin2.top+10})`)
+
+
+          
+             
+           function loadLine(plotType) {
+
+
+               type = plotType
+               const xScale = d3.scaleLinear().domain(yearExtent).range([0, chartWidth2]);
+               let extent = d3.extent(ghibliData, d => d[plotType]);
+
+
+               let yScale = d3.scaleLog().domain(extent).range([chartHeight2,0])
+               if (type ==="Duration"){
+                   yScale = d3.scaleLinear().domain(extent).range([chartHeight2,0])
+               }
+
+
+               let leftAxis2 = d3.axisLeft(yScale).tickFormat(d3.format(".2s"))
+               let leftGridlines2 = d3.axisLeft(yScale)
+                       .tickSize(-chartWidth2-10)
+                       .tickFormat("");
+              
+               yAxis.call(leftAxis2)
+               .selectAll('path,line').style('stroke', 'black');
+               yAxis.selectAll('text').style('fill', 'black').style("text-shadow", "none");
+
+
+               let bottomAxis = d3.axisBottom(xScale).tickFormat(d3.format(".0f"));
+               xAxis.call(bottomAxis)
+               .selectAll('path,line').style('stroke', 'black');
+               xAxis.selectAll('text').style('fill', 'black').style("text-shadow", "none");
+
+
+               const miyazakiData = ghibliData.filter(d => d.Director === "Hayao Miyazaki");
+               const othersData = ghibliData.filter(d => d.Director !== "Hayao Miyazaki");
+
+
+               const lineGenerator= d3.line()
+                   .x(d => xScale(d['Year']))
+                   .y(d => yScale(d[plotType]))
+                   .curve(d3.curveCatmullRom); 
+            
+           // miyazaki line
+           chartArea.selectAll('path.miyazaki-line')
+                   .data([miyazakiData]) 
+                   .join(
+                       enter => enter.append('path')
+                           .attr('class', 'miyazaki-line')
+                           .attr('fill', 'none')
+                           .attr('stroke', 'rgb(4, 88, 96)')
+                           .attr('stroke-width', 2)
+                           .attr('d', lineGenerator),
+                       update => update
+                           .transition() 
+                           .duration(500)
+                           .attr('d', lineGenerator),
+                       exit => exit.remove()
+                   );
+           // takahata line
+           chartArea.selectAll('path.others-line')
+               .data([othersData])
+               .join(
+                   enter => enter.append('path')
+                       .attr('class', 'others-line')
+                       .attr('fill', 'none')
+                       .attr('stroke', 'rgb(230, 163, 19)')
+                       .attr('stroke-width', 2)
+                       .attr('d', lineGenerator),
+                   update => update
+                       .transition() 
+                       .duration(500)
+                       .attr('d', lineGenerator),
+                   exit => exit.remove()
+       );
+           // adding circles
+               let circles = chartArea.selectAll("circle.point")
+                   .data(ghibliData)
+                   .join(
+                       enter => enter.append("circle")
+                       .attr("class","point")
+                   .attr("cx", d => xScale(d['Year']))
+                   .attr("cy", d => yScale( d[plotType]))
+                   .attr("r", 3)
+                   .attr("opacity", 1)
+                   .style("fill", d => d.Director === "Hayao Miyazaki" ? 'rgb(4, 88, 96)' : 'rgb(230, 163, 19)'),
+                   update => update
+                       .transition() 
+                       .duration(500)
+                       .attr("cx", d => xScale(d['Year']))
+                     .attr("cy", d => yScale(d[plotType])) ,
+                   exit => exit.remove()
+                   )
+
+
+           // lineplot mouseover
+
+
+               let labelback2 = lineplot.append("rect").attr("visibility","hidden")   
+               let label2 = lineplot.append("text").attr("visibility","hidden")   
+
+
+               circles.on("mouseover", function() {
+                  
+               d3.select(this).transition().duration(200)
+                   .attr("r", 10)
+                   .attr("stroke", "beige")
+                   .attr("stroke-width", 2);
+            
+               let film = d3.select(this).datum()
+               let xloc = 380
+               let yloc = 280
+               let name = film["Name"]
+               let allInfo = name
+
+
+
+
+               label2.text(allInfo)
+                   .attr("x", xloc)
+                   .attr("y",yloc)
+                   .attr("visibility", "visible")
+                   .style("font-size", "12")
+                   .style("font-weight", "bold")
+                   .style("text-shadow", "none")
+                   .style("font-style", "italic")
+
+
+               label2.append("tspan").text(film["Director"]).attr("x", xloc).attr("dy", "2em").style("font-weight", "lighter")
+               label2.append("tspan").text("Budget: $"+film["Budget"].toLocaleString()).attr("x",  xloc).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkred")
+               label2.append("tspan").text("Revenue: $"+film["Revenue"].toLocaleString()).attr("x", xloc).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkgreen")
+               label2.append("tspan").text("Duration: "+film["Duration"]+" minutes").attr("x",  xloc).attr("dy", "2em").style("font-weight", "lighter").style("font-style", "normal").style("fill", "darkblue")
+
+
+               labelback2.style("fill","beige")
+                   .attr("width", 200)
+                   .attr("height", 130)
+                   .attr("visibility","visible")
+                   .attr("x", xloc-10)
+                   .attr("y", yloc-20)
+                   .style("stroke-width", "2")
+                   .style("rx", "5")
+           })
+               circles.on("mouseout", function() {
+             
+                   d3.select(this).transition().duration(200)
+                       .attr("r", 3)
+                       .attr("stroke", "none");
+
+
+               });
+        
+
+
+           }
+       // button bar
+       const plotTypes = ["Budget", "Revenue", "Duration"]
+         plotTypes.forEach(d => {
+
+
+           d3.select("div#button-bar")
+             .append("button")
+             .attr("id", `${d}`)
+             .attr("class", "plotTypes")
+             .text(d)
+             .on("click", function () {
+               d3.selectAll("button.plotTypes").style('background-color', "beige").style("text-decoration", "none");
+               d3.select(this).style("background-color", "rgb(230, 163, 19)")
+               plotType = d;
+               loadLine(d);
+           })
+       })
+           d3.select(`button#Budget`)
+           .style('background-color', "rgb(230, 163, 19)")
+           .style("text-decoration", "underline");
+           loadLine("Budget");
+
+
+        
+       // scrolly functionality
+       window.onload = function() {
+         scrolly();
+       };
+
+
+       d3.selectAll("[class^='overlay']").each(function() {
+       var overlay = d3.select(this);
+
+
+       overlay.append("span")
+           .text("x")
+           .attr("class", "close-button")
+           .on("click", function() {
+               d3.select(this.parentNode).style("display", "none");
+           });
+   });
+
+
+   }
+       requestData();
+
+
+   </script>
 </html>
